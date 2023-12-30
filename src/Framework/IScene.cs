@@ -1,12 +1,14 @@
 using System;
-using Game = MyAtsGame.GameClass.SfmlGameClass;
-using Window = SFML.Graphics.RenderWindow;
 namespace MyAtsGame.GameClass;
 
-public interface IScene
+public interface IScene<GameConstants>
 {
-    Exception? Load(ref Game game, in Window window);
-    Exception? Update(ref Game game, long delta, out IScene? next);
-    Exception? Draw(in Window window, long delta);
-    Exception? Destroy(ref Game game, in Window window);
+    Exception? Load(SfmlGameClass<GameConstants> game) => null;
+    Exception? Update(SfmlGameClass<GameConstants> game, long delta, out IScene<GameConstants>? next)
+    {
+        next = null;
+        return null;
+    }
+    Exception? Draw(SfmlGameClass<GameConstants> game, long delta) => null;
+    Exception? Destroy(SfmlGameClass<GameConstants> game) => null;
 }
