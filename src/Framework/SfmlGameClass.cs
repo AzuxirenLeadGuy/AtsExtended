@@ -5,44 +5,45 @@ using SFML.System;
 
 namespace MyAtsGame.GameClass
 {
-	public partial class SfmlGameClass(GameConstants constants, IScene foreground, IScene background)
+	public partial class SfmlGameClass<GameConstants>
 	{
-		private IScene main = foreground;
-		private readonly IScene back = background;
-		public readonly GameConstants Constants = constants;
-		protected RenderWindow _window = new
-		(
-			new
-			(
-				constants.Window.Width,
-				constants.Window.Height
-			),
-			constants.GameTitle,
-			constants.Window.Style
-		);
+		protected WindowSettings _settings = default;
+		protected RenderWindow _window = default!;
+		protected IScene<GameConstants> _back = default!, _main = default!;
 		protected Clock _clock = new();
 		protected bool _exit_called;
-		protected Exception? Initialize()
+		protected Exception? Initialize(GameInit<GameConstants> init)
 		{
-			if (Constants.Window.VerticalSync)
+			_back = init.Background;
+			_main = init.Foreground;
+			_settings = init.Settings;
+			_window = new
+			(
+				new
+				(
+					_settings.Width,
+					_settings.Height
+				),
+				_settings.GameTitle,
+				_settings.Style
+			);
+			if (_settings.VerticalSync)
 				_window.SetVerticalSyncEnabled(true);
 			else
-				_window.SetFramerateLimit(Constants.Window.FramePerSeconds);
+				_window.SetFramerateLimit(_settings.FramePerSeconds);
 			_window.Closed += (o, e) => _exit_called = true;
-			// TODO Add more initialization to game if needed
+			_window.Position = new Vector2i();
 			return null;
 		}
 		protected Exception? OnBeginFrame()
 		{
 			_window.DispatchEvents();
 			_window.Clear();
-			// TODO Other startup if needed
 			return null;
 		}
 		protected Exception? OnEndFrame(out long time, out bool exit_called)
 		{
 			_window.Display();
-			// TODO Other actions if needed
 			time = _clock.Restart().AsMicroseconds();
 			exit_called = _exit_called;
 			return null;
@@ -52,7 +53,6 @@ namespace MyAtsGame.GameClass
 			_window.Close();
 			_window.Dispose();
 			_clock.Dispose();
-			// TODO Other cleanup if needed
 			return null;
 		}
 		public bool ExitCall()
