@@ -16,7 +16,7 @@ public partial class SfmlGameClass<GameConstants>
 	{
 		GameType game = new();
 		Exception? exp, load_exp = null;
-		IScene<GameConstants>? next = null;
+		Scene<GameConstants>? next = null;
 		exp = game.Initialize(init) ??
 			game._back.Load(game) ??
 			game._main.Load(game);
@@ -28,10 +28,13 @@ public partial class SfmlGameClass<GameConstants>
 			var scene = is_loading ? game._back : game._main;
 			exp = game.OnBeginFrame() ??
 				scene.Update(game, delta, out next) ??
-				scene.Draw(game, delta) ??
+				scene.Draw(game, game._window, delta) ??
 				game.OnEndFrame(out delta, out exit_called);
 			if (exp != null) return exp;
 			else if (load_exp != null) return load_exp;
+			if (next == null) continue;
+			if (next == game._main || next == game._back)
+				return new Exception("`next` must either be null, or must be a newly allocated Scene(without any of its inner functions called), and thus cannot be an already existing scene in the game");
 			if (next != null)
 			{
 				is_loading = true;
