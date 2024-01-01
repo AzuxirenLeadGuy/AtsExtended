@@ -32,8 +32,7 @@ public partial class SfmlGameClass<GameConstants>
 				game.OnEndFrame(out delta, out exit_called);
 			if (exp != null) return exp;
 			else if (load_exp != null) return load_exp;
-			else if (is_loading) continue;
-			else if (next != null)
+			if (next != null)
 			{
 				is_loading = true;
 				Task.Run(() =>
@@ -44,7 +43,7 @@ public partial class SfmlGameClass<GameConstants>
 				});
 			}
 		}
-		while (game._exit_called == false);
+		while (!game._exit_called);
 		return init.Background.Destroy(game) ??
 			init.Foreground.Destroy(game) ??
 			game.ShutDown();
