@@ -4,7 +4,15 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <PackageId>AzuxirenLeadGuy.AtsExtended</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>AzuxirenLeadGuy</Authors>
+    <Company>Azuxiren</Company>
+
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
+
 
   <ItemGroup>
     <PackageReference Include="SFML.NET" Version="2.5.1" />
